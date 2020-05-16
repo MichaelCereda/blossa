@@ -1,0 +1,29 @@
+{
+    "name": "blossa",
+    "version": "0.1.0",
+    "description": "Blossa is a lightweight web framework for Cloudflare Workers",
+    "main": "src/index.js",
+    "scripts": {
+      "test": "npm test"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/MichaelCereda/blossa.git"
+    },
+    "keywords": [
+      "blossa",
+      "cloudflare",
+      "workers",
+      "wrangler",
+      "api",
+      "web",
+      "framework"
+    ],
+    "author": "Michael Cereda <michael@michaelcereda.com>",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/MichaelCereda/blossa/issues"
+    },
+    "homepage": "https://github.com/MichaelCereda/blossa#readme"
+  }
+  
