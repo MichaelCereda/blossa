@@ -1,29 +1,54 @@
 {
-    "name": "blossa",
-    "version": "0.1.0",
-    "description": "Blossa is a lightweight web framework for Cloudflare Workers",
-    "main": "src/index.js",
-    "scripts": {
-      "test": "npm test"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/MichaelCereda/blossa.git"
-    },
-    "keywords": [
-      "blossa",
-      "cloudflare",
-      "workers",
-      "wrangler",
-      "api",
-      "web",
-      "framework"
-    ],
-    "author": "Michael Cereda <michael@michaelcereda.com>",
-    "license": "MIT",
-    "bugs": {
-      "url": "https://github.com/MichaelCereda/blossa/issues"
-    },
-    "homepage": "https://github.com/MichaelCereda/blossa#readme"
-  }
-  
+  "name": "blossa",
+  "version": "0.1.0",
+  "description": "Blossa is a lightweight web framework for Cloudflare Workers",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "clean": "rimraf lib",
+    "build": "npm run clean && tsc",
+    "prepublishOnly": "",
+    "version": "npm run format && git add -A src",
+    "lint": "eslint . --ext .ts",
+    "lint-and-fix": "eslint . --ext .ts --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelCereda/blossa.git"
+  },
+  "keywords": [
+    "blossa",
+    "cloudflare",
+    "workers",
+    "wrangler",
+    "api",
+    "web",
+    "framework"
+  ],
+  "author": "Michael Cereda <michael@michaelcereda.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MichaelCereda/blossa/issues"
+  },
+  "homepage": "https://github.com/MichaelCereda/blossa#readme",
+  "devDependencies": {
+    "@types/jest": "^25.2.2",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "@udacity/types-service-worker-mock": "^1.2.0",
+    "cloudflare-worker-mock": "^1.2.0",
+    "eslint": "^6.8.0",
+    "jest": "^26.0.1",
+    "jest-fetch-mock": "^3.0.3",
+    "rimraf": "^3.0.2",
+    "service-worker-mock": "^2.0.5",
+    "ts-jest": "^26.0.0",
+    "types-cloudflare-worker": "^1.2.0",
+    "typescript": "^3.9.2"
+  },
+  "dependencies": {},
+  "files": [
+    "lib/**/**"
+  ]
+}
