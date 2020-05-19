@@ -40,11 +40,11 @@ app.get('/error',(request, response) => {
 
 The project is currently in development, here's a list of what's on the roadmap.  
 
-[X] Basic test coverage  
-[X] Linter
-[ ] Full test coverage  
-[ ] Documentation
-[ ] CI/CD Integration
+- [x] Basic test coverage  
+- [x] Linter
+- [ ] Full test coverage  
+- [ ] Documentation
+- [ ] CI/CD Integration
 
 ## Installation
 
