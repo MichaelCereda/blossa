@@ -17,13 +17,13 @@ const Post = Method('post')
 const Put = Method('put')
 const Trace = Method('trace')
 
-const Header = (header: string, val: string) => (req: Request): boolean => req.headers.get(header) === val
-const Host = (host: string) => {
-    return Header('host', host.toLowerCase())
-}
-const Referrer = (host: string) => Header('referrer', host.toLowerCase())
+// const Header = (header: string, val: string) => (req: Request): boolean => req.headers.get(header) === val
+// const Host = (host: string) => {
+//     return Header('host', host.toLowerCase())
+// }
+// const Referrer = (host: string) => Header('referrer', host.toLowerCase())
 
-const Path = (regExp: string) => (req: Request) => {
+const Path = (regExp: string) => (req: Request): boolean => {
     const url = new URL(req.url)
     const path = url.pathname
     const match = path.match(regExp) || []
@@ -52,7 +52,7 @@ export class Router {
         this.routes = [];
     }
 
-    private handle(conditions: Condition[], handler: Handler) {
+    private handle(conditions: Condition[], handler: Handler): Router {
         this.routes.push({
             conditions,
             handler,
@@ -60,47 +60,47 @@ export class Router {
         return this
     }
 
-    connect(url: string, handler: Handler) {
+    connect(url: string, handler: Handler): Router {
         return this.handle([Connect, Path(url)], handler)
     }
 
-    delete(url: string, handler: Handler) {
+    delete(url: string, handler: Handler): Router {
         return this.handle([Delete, Path(url)], handler)
     }
 
-    get(url: string, handler: Handler) {
+    get(url: string, handler: Handler): Router {
         return this.handle([Get, Path(url)], handler)
     }
 
-    head(url: string, handler: Handler) {
+    head(url: string, handler: Handler): Router {
         return this.handle([Head, Path(url)], handler)
     }
 
-    options(url: string, handler: Handler) {
+    options(url: string, handler: Handler): Router {
         return this.handle([Options, Path(url)], handler)
     }
 
-    patch(url: string, handler: Handler) {
+    patch(url: string, handler: Handler): Router {
         return this.handle([Patch, Path(url)], handler)
     }
 
-    post(url: string, handler: Handler) {
+    post(url: string, handler: Handler): Router {
         return this.handle([Post, Path(url)], handler)
     }
 
-    put(url: string, handler: Handler) {
+    put(url: string, handler: Handler): Router {
         return this.handle([Put, Path(url)], handler)
     }
 
-    trace(url: string, handler: Handler) {
+    trace(url: string, handler: Handler): Router {
         return this.handle([Trace, Path(url)], handler)
     }
 
-    all(handler: Handler) {
+    all(handler: Handler): Router {
         return this.handle([], handler)
     }
 
-    protected route(req: Request, res: BlossaResponse) {
+    protected route(req: Request, res: BlossaResponse): Response {
         const route = this.resolve(req)
         if (route) {
             return route.handler(req, res)
@@ -119,7 +119,7 @@ export class Router {
      * resolve returns the matching route for a request that returns
      * true for all conditions (if any).
      */
-    private resolve(req: Request) {
+    private resolve(req: Request): Route | undefined {
         return this.routes.find(r => {
             if (!r.conditions || (Array.isArray(r) && !r.conditions.length)) {
                 return true
