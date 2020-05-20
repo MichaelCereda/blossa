@@ -1,5 +1,5 @@
 # Blossa
-Blossa is a lightweight web framework with middleware support built for Cloudflare Workers.
+Blossa is a fast and lightweight web framework for Cloudflare workers.
 
 ```js
 import Blossa from "blossa";
@@ -34,7 +34,7 @@ app.get('/error',(request, response) => {
 - Straightforward API.
 - Built for Cloudflare Workers
 - Typescript support
-- Test
+- Thoroughly tested
 
 ## Currently in development
 
