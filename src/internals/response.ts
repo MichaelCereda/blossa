@@ -16,6 +16,16 @@ interface TextResponse {
   (data: string, headers?: HeadersType): Response;
 }
 
+export interface BlossaResponse {
+  (
+    status: Status,
+    statusText: StatusText,
+    json: JsonResponse,
+    send: TextResponse
+  ): Response;
+}
+
+
 export class BlossaResponse {
   private _status = 200;
   private _statusText = "";
@@ -56,11 +66,3 @@ export class BlossaResponse {
   }
 }
 
-export interface BlossaResponse {
-  (
-    status: Status,
-    statusText: StatusText,
-    json: JsonResponse,
-    send: TextResponse
-  ): Response;
-}
