@@ -34,7 +34,7 @@ const Path = (regExp: string) => (req: BlossaRequest): boolean => {
 interface Condition {
   (req: BlossaRequest): boolean;
 }
-interface Handler {
+export interface Handler {
   (request: BlossaRequest, response: BlossaResponse): Response;
 }
 type Route = {

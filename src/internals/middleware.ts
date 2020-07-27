@@ -2,10 +2,16 @@
 // https://gist.github.com/darrenscerri/5c3b3dcbe4d370435cfa
 // https://gist.github.com/sylvainleris/6a051f2a9e7420b32b6db7d8d47b968b
 
+import { BlossaRequest, BlossaResponse } from "..";
+
 // https://github.com/middyjs/middy/blob/master/packages/core/index.js
 
 export interface MiddlewareNext {
   (): void;
+}
+
+export interface MiddlewareMethod {
+  (request: BlossaRequest, response: BlossaResponse, next: Function): void;
 }
 
 export default interface Middleware {
