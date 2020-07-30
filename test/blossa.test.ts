@@ -35,7 +35,6 @@ describe("Router", () => {
           request: BlossaRequest,
           resp: BlossaResponse
         ): Response => {
-          console.log(request)
           return resp.send("Hello");
         };
 
