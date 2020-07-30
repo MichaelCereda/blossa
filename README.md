@@ -42,6 +42,7 @@ The project is currently in development, here's a list of what's on the roadmap.
 
 - [x] Basic test coverage  
 - [x] Linter
+- [x] Usage Example
 - [ ] Full test coverage  
 - [ ] Documentation
 - [ ] CI/CD Integration
