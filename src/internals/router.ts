@@ -35,7 +35,7 @@ interface Condition {
   (req: BlossaRequest): boolean;
 }
 export interface Handler {
-  (request: BlossaRequest, response: BlossaResponse): Response;
+  (request: BlossaRequest, response: BlossaResponse): Response | Promise<Response>;
 }
 type Route = {
   path: string;
@@ -107,7 +107,7 @@ export class Router {
     return this.handle("", [], handler);
   }
 
-  protected route(req: BlossaRequest, res: BlossaResponse): Response {
+  protected async route(req: BlossaRequest, res: BlossaResponse): Promise<Response> {
     const route = this.resolve(req);
     if (route) {
       const url = new URL(req.url);
@@ -120,6 +120,7 @@ export class Router {
           }
         });
       }
+      
       return route.handler(req, res);
     }
 

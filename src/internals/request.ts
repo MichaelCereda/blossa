@@ -6,8 +6,7 @@ function fakeBaseClass<T>(): new () => Pick<T, keyof T> {
 export class BlossaRequest extends fakeBaseClass<Request>() {
   private _request: Request;
   private _proxy_handler = {
-    get: (target: object, property: string, receiver: any): any => {
-      // eslint-disable-line @typescript-eslint/no-explicit-any
+    get: (target: object, property: string, receiver: any): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
       if (Reflect.has(target, property)) {
         return Reflect.get(target, property, receiver);
       }
