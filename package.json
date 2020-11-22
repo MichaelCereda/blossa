@@ -1,6 +1,6 @@
 {
   "name": "blossa",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Blossa is a lightweight web framework for Cloudflare Workers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
