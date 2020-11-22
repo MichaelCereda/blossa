@@ -16,18 +16,16 @@ describe("Router", () => {
     // Import and init the Worker.
     jest.requireActual("../src");
   });
-  // it("should add listeners", async () => {
-  //   expect(self.listeners.get("fetch")).toBeDefined();
-  // });
+
   describe("Matching regular expressions", () => {
     [
       {
         path_expression: "/test",
-        requested_url: "/test"
+        requested_url: "/test",
       },
       {
         path_expression: "/hello/(?<year>[0-9]{4}).(?<month>[0-9]{2})",
-        requested_url: "/hello/2020.02"
+        requested_url: "/hello/2020.02",
       },
     ].forEach((t) => {
       it(`Should match string '${t.path_expression}'`, async () => {
@@ -51,14 +49,6 @@ describe("Router", () => {
         expect(mockedHandler.mock.calls.length).toBe(1);
         expect(response.status).toBe(200);
         expect(body).toBe("Hello");
-
-        // TODO: make sure that the handler is called with Resquest, BlossaResponse as parameters
-        // expect(mockedHandler).toHaveBeenCalledWith(expect.objectContaining({
-        //   "method": "GET"
-        // }));
-        // expect(mockedHandler).toBeCalledWith(expect.objectContaining({
-        //   "send": "GET"
-        // }));
       });
     });
   });
@@ -72,7 +62,6 @@ describe("Router", () => {
       };
 
       const mockedHandler = jest.fn(handler);
-
       const app: Blossa = new Blossa();
       app.get("/test/path", mockedHandler);
 
@@ -83,14 +72,41 @@ describe("Router", () => {
       expect(mockedHandler.mock.calls.length).toBe(1);
       expect(response.status).toBe(200);
       expect(body).toBe("Hello");
+    });
 
-      // TODO: make sure that the handler is called with Resquest, BlossaResponse as parameters
-      // expect(mockedHandler).toHaveBeenCalledWith(expect.objectContaining({
-      //   "method": "GET"
-      // }));
-      // expect(mockedHandler).toBeCalledWith(expect.objectContaining({
-      //   "send": "GET"
-      // }));
+    it("Should get the parameters from the url", async () => {
+      let searchParams;
+      let routeParams;
+      const handler = (
+        request: BlossaRequest,
+        resp: BlossaResponse
+      ): Response => {
+        searchParams = request.searchParams;
+        routeParams = request.params;
+        return resp.send("Hello");
+      };
+
+      const mockedHandler = jest.fn(handler);
+      const app: Blossa = new Blossa();
+      app.get("/test/(?<year>[0-9]{4})", mockedHandler);
+
+      const request = makeCloudflareWorkerRequest("/test/2020?token=aaaa");
+      const response = await self.trigger("fetch", request);
+      const body = await response.text();
+
+      expect(mockedHandler.mock.calls.length).toBe(1);
+      expect(response.status).toBe(200);
+      expect(body).toBe("Hello");
+      expect(searchParams).toEqual(
+        expect.objectContaining({
+          token: "aaaa",
+        })
+      );
+      expect(routeParams).toEqual(
+        expect.objectContaining({
+          year: "2020",
+        })
+      );
     });
   });
   describe("POST Request", () => {
@@ -103,7 +119,6 @@ describe("Router", () => {
       };
 
       const mockedHandler = jest.fn(handler);
-
       const app: Blossa = new Blossa();
       app.post("/test/path", mockedHandler);
 

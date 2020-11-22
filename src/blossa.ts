@@ -16,7 +16,7 @@ export class Blossa extends Router {
   }
   private async handleRequest(request: Request): Promise<Response> {
     return new Promise((resolve) => {
-      this.middlewareController.go(new BlossaRequest(request), new BlossaResponse(), async (req: BlossaRequest, res: BlossaResponse) => {
+      this.middlewareController.go(request, new BlossaResponse(), async (req: BlossaRequest, res: BlossaResponse) => {
         const resp: Response = await this.route(req, res) || res;
         resolve(resp);
       });    

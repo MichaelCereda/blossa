@@ -1,24 +1,36 @@
-function fakeBaseClass<T>(): new () => Pick<T, keyof T> {
-  // we use a pick to remove the abstract modifier
-  return class {} as any; // eslint-disable-line @typescript-eslint/no-explicit-any
-}
-
-export class BlossaRequest extends fakeBaseClass<Request>() {
+export class BlossaRequest extends Request {
   private _request: Request;
-  private _proxy_handler = {
-    get: (target: object, property: string, receiver: any): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
-      if (Reflect.has(target, property)) {
-        return Reflect.get(target, property, receiver);
-      }
-      return Reflect.get(this._request, property);
-    },
-  };
-  constructor(fetchApiRequest: Request) {
-    super();
-    this._request = fetchApiRequest;
+  private _url: URL;
+  private _params: Record<string, string> = {};
 
-    return new Proxy<BlossaRequest>(this, this._proxy_handler);
+  constructor(request: Request) {
+    super(request);
+    
+    this._url = new URL(request.url);
+    this._request = request;
   }
 
-  public params: Record<string, string> = {};
+  public parseRequestParams(route: string): void {
+    const path = this._url.pathname;
+
+    // params in route URL
+    const match = path.match(route) || [];
+    if (match.groups) {
+      Object.keys(match.groups).forEach((group) => {
+        if (match.groups && group in match.groups) {
+          this._params[group] = match.groups[group];
+        }
+      });
+    }
+  }
+
+  public get params(): Record<string, string> {
+    return this._params;
+  }
+  public get searchParams(): Record<string, string> {
+    return [...this._url.searchParams.entries()].reduce(
+      (acc, curr) => ({ ...acc, [curr[0]]: curr[1] }),
+      {}
+    );
+  }
 }

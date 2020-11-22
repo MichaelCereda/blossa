@@ -110,18 +110,10 @@ export class Router {
   protected async route(req: BlossaRequest, res: BlossaResponse): Promise<Response> {
     const route = this.resolve(req);
     if (route) {
-      const url = new URL(req.url);
-      const path = url.pathname;
-      const match = path.match(route.path) || [];
-      if (match.groups) {
-        Object.keys(match.groups).forEach((group) => {
-          if (match.groups && group in match.groups) {
-            req.params[group] = match.groups[group];
-          }
-        });
-      }
-      
-      return route.handler(req, res);
+      const internalRequest = new BlossaRequest(req);
+      internalRequest.parseRequestParams(route.path);
+
+      return route.handler(internalRequest, res);
     }
 
     return new Response("resource not found", {
