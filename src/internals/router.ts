@@ -6,7 +6,7 @@ import { BlossaRequest } from "./request";
  * boolean indicating if the request uses that HTTP method,
  * header, host or referrer.
  */
-const Method = (method: string) => (req: BlossaRequest): boolean =>
+const Method = (method: string) => (req: Request): boolean =>
   req.method.toLowerCase() === method.toLowerCase();
 const Connect = Method("connect");
 const Delete = Method("delete");
@@ -24,7 +24,7 @@ const Trace = Method("trace");
 // }
 // const Referrer = (host: string) => Header('referrer', host.toLowerCase())
 
-const Path = (regExp: string) => (req: BlossaRequest): boolean => {
+const Path = (regExp: string) => (req: Request): boolean => {
   const url = new URL(req.url);
   const path = url.pathname;
   const match = path.match(regExp) || [];
@@ -32,10 +32,17 @@ const Path = (regExp: string) => (req: BlossaRequest): boolean => {
 };
 
 interface Condition {
-  (req: BlossaRequest): boolean;
+  (req: Request): boolean;
 }
+
+export interface HandlerParameters {
+  request: BlossaRequest;
+  response: BlossaResponse;
+  event: FetchEvent;
+}
+
 export interface Handler {
-  (request: BlossaRequest, response: BlossaResponse): Response | Promise<Response>;
+  (params: HandlerParameters): Response | Promise<Response>;
 }
 type Route = {
   path: string;
@@ -107,13 +114,16 @@ export class Router {
     return this.handle("", [], handler);
   }
 
-  protected async route(req: BlossaRequest, res: BlossaResponse): Promise<Response> {
-    const route = this.resolve(req);
+  protected async route(
+    event: FetchEvent,
+    response: BlossaResponse
+  ): Promise<Response> {
+    const route = this.resolve(event.request);
     if (route) {
-      const internalRequest = new BlossaRequest(req);
+      const internalRequest = new BlossaRequest(event.request);
       internalRequest.parseRequestParams(route.path);
 
-      return route.handler(internalRequest, res);
+      return route.handler({ event, request: internalRequest, response });
     }
 
     return new Response("resource not found", {
@@ -129,7 +139,7 @@ export class Router {
    * resolve returns the matching route for a request that returns
    * true for all conditions (if any).
    */
-  private resolve(req: BlossaRequest): Route | undefined {
+  private resolve(req: Request): Route | undefined {
     return this.routes.find((r) => {
       if (!r.conditions || (Array.isArray(r) && !r.conditions.length)) {
         return true;

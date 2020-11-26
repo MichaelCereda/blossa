@@ -6,6 +6,7 @@ import makeCloudflareWorkerEnv, {
 } from "cloudflare-worker-mock";
 
 import Blossa, { BlossaResponse, BlossaRequest } from "../src";
+import { Handler } from "../src/internals/router";
 
 describe("Router", () => {
   beforeEach(() => {
@@ -29,11 +30,10 @@ describe("Router", () => {
       },
     ].forEach((t) => {
       it(`Should match string '${t.path_expression}'`, async () => {
-        const handler = (
-          request: BlossaRequest,
-          resp: BlossaResponse
-        ): Response => {
-          return resp.send("Hello");
+        const handler:Handler = ({
+          response
+        }) => {
+          return response.send("Hello");
         };
 
         const mockedHandler = jest.fn(handler);
@@ -54,11 +54,10 @@ describe("Router", () => {
   });
   describe("GET Request", () => {
     it("Should call a GET handler during a request", async () => {
-      const handler = (
-        request: BlossaRequest,
-        resp: BlossaResponse
-      ): Response => {
-        return resp.send("Hello");
+      const handler:Handler = ({
+        response
+      }): Response => {
+        return response.send("Hello");
       };
 
       const mockedHandler = jest.fn(handler);
@@ -77,13 +76,13 @@ describe("Router", () => {
     it("Should get the parameters from the url", async () => {
       let searchParams;
       let routeParams;
-      const handler = (
-        request: BlossaRequest,
-        resp: BlossaResponse
-      ): Response => {
+      const handler:Handler = ({
+        request,
+        response
+      }) => {
         searchParams = request.searchParams;
         routeParams = request.params;
-        return resp.send("Hello");
+        return response.send("Hello");
       };
 
       const mockedHandler = jest.fn(handler);
@@ -111,11 +110,10 @@ describe("Router", () => {
   });
   describe("POST Request", () => {
     it("Respond with plain text", async () => {
-      const handler = (
-        request: BlossaRequest,
-        resp: BlossaResponse
-      ): Response => {
-        return resp.send("Hello");
+      const handler:Handler = ({
+        response
+      }) => {
+        return response.send("Hello");
       };
 
       const mockedHandler = jest.fn(handler);
@@ -135,11 +133,10 @@ describe("Router", () => {
     });
 
     it("Respond with JSON", async () => {
-      const handler = (
-        request: BlossaRequest,
-        resp: BlossaResponse
-      ): Response => {
-        return resp.json({ message: "Hello" });
+      const handler:Handler = ({
+        response,
+      }): Response => {
+        return response.json({ message: "Hello" });
       };
 
       const mockedHandler = jest.fn(handler);

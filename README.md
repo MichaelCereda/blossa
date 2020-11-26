@@ -1,25 +1,28 @@
 # Blossa
-Blossa is a fast and lightweight web framework for Cloudflare workers.
+Create your APIs at Edge.
+
+Blossa is a fast and lightweight web framework for Cloudflare workers. It's loosely inspired by Express, with a 
+focus on minimizing boilerplate and providing a solid and modern fundation to highly scalable APIs.
 
 ```js
 import Blossa from "blossa";
 
 const app = new Blossa();
 
-app.use((request, response, next) => {
+app.use(({request, response, next}) => {
     request.body = JSON.parse(request.body);
     next();
 });
 
-app.get('/hello',(request, response) => {
+app.get('/hello',({response}) => {
     return response.send("world");
 });
 
-app.post('/ping', (request, response) => {
+app.post('/ping', ({response}) => {
     return response.json({message:"pong"});
 });
 
-app.get('/error',(request, response) => {
+app.get('/error', ({response}) => {
     return response
         .status(500)
         .statusText('Error')
@@ -43,7 +46,7 @@ The project is currently in development, here's a list of what's on the roadmap.
 - [x] Basic test coverage  
 - [x] Linter
 - [x] Usage Example
-- [ ] Full test coverage  
+- [-] Full test coverage  
 - [ ] Documentation
 - [ ] CI/CD Integration
 

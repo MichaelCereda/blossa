@@ -1,5 +1,5 @@
 export class BlossaRequest extends Request {
-  private _request: Request;
+  // private _request: Request;
   private _url: URL;
   private _params: Record<string, string> = {};
 
@@ -7,7 +7,7 @@ export class BlossaRequest extends Request {
     super(request);
     
     this._url = new URL(request.url);
-    this._request = request;
+    // this._request = request;
   }
 
   public parseRequestParams(route: string): void {

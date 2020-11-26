@@ -11,15 +11,16 @@ export class Blossa extends Router {
     super();
     this.middlewareController = new Middleware();
     self.addEventListener("fetch", (event: FetchEvent) => {
-      event.respondWith(this.handleRequest(event.request));
+      event.respondWith(this.handleRequest(event));
     });
   }
-  private async handleRequest(request: Request): Promise<Response> {
+
+  private async handleRequest(event: FetchEvent): Promise<Response> {
     return new Promise((resolve) => {
-      this.middlewareController.go(request, new BlossaResponse(), async (req: BlossaRequest, res: BlossaResponse) => {
-        const resp: Response = await this.route(req, res) || res;
+      this.middlewareController.go(event.request, new BlossaResponse(), async (req: BlossaRequest, res: BlossaResponse) => {
+        const resp: Response = await this.route(event, res) || res;
         resolve(resp);
-      });    
+      });
     });
   }
 
