@@ -1,18 +1,14 @@
 /**
- * Simple middleware function
- *
- * source: https://evertpot.com/generic-middleware/
+ * Simple middleware function.
+ * Inspired by https://evertpot.com/generic-middleware/
  */
-
-import { PartOf } from "./types";
 
 /**
  * 'next' function, passed to a middleware
  */
 interface MiddlewareNext<T> {
   (newContext?: Pick<T, keyof T>): void | Promise<void>;
-  // (): void | Promise<void>;
-  };
+}
 
 /**
  * A middleware
@@ -21,7 +17,6 @@ export type Middleware<T> = (
   context: Pick<T, keyof T>,
   next: MiddlewareNext<T>
 ) => Promise<void> | void;
-
 
 /**
  * A middleware container and invoker
