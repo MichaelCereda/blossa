@@ -1,10 +1,18 @@
-import Blossa, { BlossaRequest, BlossaResponse} from "../src";
+import Blossa from "../src";
+import { BlossaMiddlewareContext } from "../src/blossa";
 
-const app = new Blossa();
+/** Creating a custom context is not required, but it might be useful for certain usecases or for the creation of plugins */
+interface  CustomContext extends BlossaMiddlewareContext {
+    additional_context: string,
+} 
+const app = new Blossa<CustomContext>();
 
-app.use((request: BlossaRequest, response: BlossaResponse, next: Function) => {
-    // request.body = JSON.parse(request.body);
-    next();
+/**
+ * In order to preserve context, middlewares need to use spread operators.
+ */
+app.use(({request, response, ...ctx}, next) => {
+    // Here I can manipulate any parameter of the request and pass it down as context
+    next({...ctx, request, response});
 });
 
 app.get('/hello',({response}) => {

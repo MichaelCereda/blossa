@@ -1,40 +1,67 @@
-// Inspired by
-// https://gist.github.com/darrenscerri/5c3b3dcbe4d370435cfa
-// https://gist.github.com/sylvainleris/6a051f2a9e7420b32b6db7d8d47b968b
+/**
+ * Simple middleware function
+ *
+ * source: https://evertpot.com/generic-middleware/
+ */
 
-import { BlossaRequest, BlossaResponse } from "..";
+import { PartOf } from "./types";
 
-// https://github.com/middyjs/middy/blob/master/packages/core/index.js
+/**
+ * 'next' function, passed to a middleware
+ */
+interface MiddlewareNext<T> {
+  (newContext?: Pick<T, keyof T>): void | Promise<void>;
+  // (): void | Promise<void>;
+  };
 
-export interface MiddlewareNext {
-  (): void;
-}
+/**
+ * A middleware
+ */
+export type Middleware<T> = (
+  context: Pick<T, keyof T>,
+  next: MiddlewareNext<T>
+) => Promise<void> | void;
 
-export interface MiddlewareMethod {
-  (request: BlossaRequest, response: BlossaResponse, next: Function): void;
-}
 
-export default interface Middleware {
-  (request: Request, response: ResponseType, next: MiddlewareNext): void;
-}
+/**
+ * A middleware container and invoker
+ */
+export class MiddlewareDispatcher<T> {
+  // type K extends keyof;
+  private middlewares: Middleware<T>[];
 
-export default class Middleware {
-  use(method: Function): void {
-    this.go = ((stack) => (
-      ...args: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
-    ): void =>
-      stack(...args.slice(0, -1), () => {
-        const next = args[args.length - 1];
-        method.apply(this, [
-          ...args.slice(0, -1),
-          next.bind.apply(next, [null, ...args.slice(0, -1)]),
-        ]);
-      }))(this.go);
+  constructor() {
+    this.middlewares = [];
   }
 
-  go(
-    ...args: any[] // eslint-disable-line @typescript-eslint/no-explicit-any
-  ): void {
-    if (args.length) args[args.length - 1].apply(this, args.slice(0, -1));
+  /**
+   * Add a middleware function.
+   */
+  use(...mw: Middleware<T>[]): void {
+    this.middlewares.push(...mw);
   }
+
+  /**
+   * Execute the chain of middlewares, in the order they were added on a
+   * given Context.
+   */
+  dispatch(context: Pick<T, keyof T>): Promise<void> {
+    return invokeMiddlewares(context, this.middlewares);
+  }
+}
+
+/**
+ * Helper function for invoking a chain of middlewares on a context.
+ */
+async function invokeMiddlewares<T>(
+  context: Pick<T, keyof T> | undefined,
+  middlewares: Middleware<T>[]
+): Promise<void> {
+  if (!middlewares.length) return;
+
+  const mw = middlewares[0];
+
+  return mw(context as Pick<T, keyof T>, (newContext) => {
+    invokeMiddlewares(newContext, middlewares.slice(1));
+  });
 }

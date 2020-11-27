@@ -25,7 +25,6 @@ export interface BlossaResponse {
   ): Response;
 }
 
-
 export class BlossaResponse {
   private _status = 200;
   private _statusText = "";
@@ -65,4 +64,3 @@ export class BlossaResponse {
     });
   }
 }
-

@@ -1,11 +1,8 @@
-import { CloudflareWorkerGlobalScope } from "types-cloudflare-worker";
-declare let self: CloudflareWorkerGlobalScope;
-
 import makeCloudflareWorkerEnv, {
   makeCloudflareWorkerRequest,
 } from "cloudflare-worker-mock";
-
-import Blossa, { BlossaResponse, BlossaRequest } from "../src";
+import { CloudflareWorkerGlobalScope } from "types-cloudflare-worker";
+declare let self: CloudflareWorkerGlobalScope;
 
 describe("Example worker", () => {
   beforeEach(() => {
@@ -39,9 +36,9 @@ describe("Example worker", () => {
     ].forEach((t) => {
       it(`Should call ${t.requested_url} with ${t.method} method`, async () => {
         const request = makeCloudflareWorkerRequest(t.requested_url, {
-            method: t.method,
-            cf: {},
-          });
+          method: t.method,
+          cf: {},
+        });
 
         const response = await self.trigger("fetch", request);
 
