@@ -1,11 +1,11 @@
 {
   "name": "blossa",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Edge API framework for Cloudflare Workers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "node --unhandled-rejections=strict --trace-warnings node_modules/.bin/jest --coverage",
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
     "prepublishOnly": "npm run build",

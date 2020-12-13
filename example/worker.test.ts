@@ -31,6 +31,20 @@ describe("Example worker", () => {
         method: "GET",
         expected: "async",
       },
+      {
+        requested_url: "/async/",
+        method: "GET",
+        expected: "async",
+      },
+      {
+        requested_url: "/async/?param=aaaa",
+        method: "GET",
+        expected: "async",
+      },{
+        requested_url: "/async?param=aaaa",
+        method: "GET",
+        expected: "async",
+      },
       // get('/error',
       // get('/async'
     ].forEach((t) => {

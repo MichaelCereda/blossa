@@ -26,7 +26,7 @@ const Trace = Method("trace");
 
 const Path = (regExp: string) => (req: Request): boolean => {
   const url = new URL(req.url);
-  const path = url.pathname;
+  const path = url.pathname.replace(/\/$/, "");
   const match = path.match(regExp) || [];
   return match[0] === path;
 };
@@ -123,7 +123,17 @@ export class Router {
       const internalRequest = new BlossaRequest(event.request);
       internalRequest.parseRequestParams(route.path);
 
-      return route.handler({ event, request: internalRequest, response });
+      try {
+        return route.handler({ event, request: internalRequest, response })
+      } catch(e){
+          return new Response("error parsing the request", {
+            status: 500,
+            statusText: "not found",
+            headers: {
+              "content-type": "text/plain",
+            },
+          });
+        }
     }
 
     return new Response("resource not found", {

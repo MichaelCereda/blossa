@@ -31,7 +31,7 @@ app.get('/error',({response}) => {
 });
 
 app.get('/async', async ({response}) => {
-    return response.send("async");
+    return await response.send("async");
 });
 
 export default app

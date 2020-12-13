@@ -29,11 +29,14 @@ export class Blossa<
 
   private async handleRequest(event: FetchEvent): Promise<Response> {
     return new Promise<Response>((resolve) => {
-      this.middlewareDispatcher.use(({ event, response }, next) => {
+      this.middlewareDispatcher.use((context, next) => {
+        if (!context) return next();
+        const { event, response } = context;
         const resp: Promise<Response> = this.route(event, response) || response;
         resolve(resp);
         next();
       });
+
       this.middlewareDispatcher.dispatch({
         event,
         request: new BlossaRequest(event.request),
