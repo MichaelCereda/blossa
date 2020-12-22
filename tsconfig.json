@@ -12,7 +12,7 @@
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-    "types": ["@cloudflare/workers-types", "@types/jest","node" ]
+    "types": ["@cloudflare/workers-types", "node", "@types/jest" ]
   },
   "include": [
     "src",
