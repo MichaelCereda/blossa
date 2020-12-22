@@ -6,5 +6,5 @@ module.exports = {
     setupFiles: [
       "./test/setupJest.ts"
     ],
-    modulePathIgnorePatterns: ["node_modules", "packages", "demo"]
+    modulePathIgnorePatterns: ["node_modules", "packages", "demo", "old_example"]
   };

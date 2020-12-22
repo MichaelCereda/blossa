@@ -1,5 +1,5 @@
 import { BlossaResponse } from "./response";
-import { BlossaRequest } from "./request";
+import { BlossaRoute, parseRouteParams } from "./route";
 
 /**
  * Helper functions that when passed a request will return a
@@ -36,7 +36,7 @@ interface Condition {
 }
 
 export interface HandlerParameters {
-  request: BlossaRequest;
+  route: BlossaRoute;
   response: BlossaResponse;
   event: FetchEvent;
 }
@@ -120,20 +120,24 @@ export class Router {
   ): Promise<Response> {
     const route = this.resolve(event.request);
     if (route) {
-      const internalRequest = new BlossaRequest(event.request);
-      internalRequest.parseRequestParams(route.path);
+      // const internalRequest = new BlossaRequest(event.request);
+      // internalRequest.parseRequestParams(route.path);
 
       try {
-        return route.handler({ event, request: internalRequest, response })
-      } catch(e){
-          return new Response("error parsing the request", {
-            status: 500,
-            statusText: "not found",
-            headers: {
-              "content-type": "text/plain",
-            },
-          });
-        }
+        return route.handler({
+          event,
+          route: parseRouteParams(event.request.url, route.path),
+          response,
+        });
+      } catch (e) {
+        return new Response("error parsing the request", {
+          status: 500,
+          statusText: "not found",
+          headers: {
+            "content-type": "text/plain",
+          },
+        });
+      }
     }
 
     return new Response("resource not found", {
