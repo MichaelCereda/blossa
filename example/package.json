@@ -23,7 +23,8 @@
     "ts-loader": "^7.0.5",
     "typescript": "^3.9.7",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "ini": ">=1.3.6"
   },
   "dependencies": {
     "blossa": "^1.0.1"
