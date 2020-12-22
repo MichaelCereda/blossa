@@ -10,8 +10,8 @@ import Blossa from "blossa";
 
 const app = new Blossa();
 
-app.use(({request, response, ...ctx}, next) => {
-    next({...ctx, request, response});
+app.use(({event, response, ...ctx}, next) => {
+    next({...ctx, event, response});
 });
 app.get('/hello',({response}) => {
     return response.send("world");
@@ -26,6 +26,12 @@ app.get('/error', ({response}) => {
         .status(500)
         .statusText('Error')
         .send({error: "Huston we have a problem"});
+});
+
+app.post('/hellouser/', async ({event, response}) => {
+    const body = await event.request.json();
+    return response
+        .send(`Hello ${body.username}`);
 });
 ```
 

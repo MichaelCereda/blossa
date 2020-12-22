@@ -10,4 +10,9 @@ module.exports = {
   rules: {
     "no-console": 1,
   },
+  "env": {
+    "browser": true,
+    "amd": true,
+    "node": true
+},
 };

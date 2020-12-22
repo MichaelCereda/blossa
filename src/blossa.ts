@@ -1,13 +1,13 @@
 import CloudflareWorkerGlobalScope from "types-cloudflare-worker";
 import { BlossaResponse } from "./internals/response";
 import { Router } from "./internals/router";
-import { BlossaRequest } from "./internals/request";
-import { MiddlewareDispatcher, Middleware } from "./internals/middleware";
+import { MiddlewareDispatcher, Middleware } from "./internals/utils/middleware";
+import { BlossaRoute } from "./internals/route";
 declare let self: CloudflareWorkerGlobalScope;
 
 export type BlossaMiddlewareContext = {
   event: FetchEvent;
-  request: BlossaRequest;
+  route: BlossaRoute,
   response: BlossaResponse;
 };
 
@@ -39,7 +39,6 @@ export class Blossa<
 
       this.middlewareDispatcher.dispatch({
         event,
-        request: new BlossaRequest(event.request),
         response: new BlossaResponse(),
       } as Pick<U, keyof U>);
     });

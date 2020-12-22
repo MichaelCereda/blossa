@@ -121,13 +121,13 @@ describe("Router", () => {
       let searchParams: Record<string, string>;
       let routeParams: Record<string, string>;
 
-      const handler: Handler = ({ request, response }) => {
-        expect(request.searchParams).toEqual(
+      const handler: Handler = ({ route, response }) => {
+        expect(route.searchParams).toEqual(
           expect.objectContaining({
             token: "aaaa",
           })
         );
-        expect(request.params).toEqual(
+        expect(route.params).toEqual(
           expect.objectContaining({
             year: "2020",
           })
@@ -172,8 +172,9 @@ describe("Router", () => {
     });
 
     it("Respond with JSON", async () => {
-      const handler: Handler = ({ response }): Response => {
-        return response.json({ message: "Hello" });
+      const handler: Handler = async ({ event, response }): Promise<Response> => {
+        const r = await event.request.json();
+        return response.json({ message: `Hello ${r.username}` });
       };
 
       const mockedHandler = jest.fn(handler);
@@ -183,6 +184,7 @@ describe("Router", () => {
 
       const request = makeCloudflareWorkerRequest("/test/path", {
         method: "POST",
+        body: JSON.stringify({username: "Mark"}),
         cf: {},
       });
       const response = await self.trigger("fetch", request);
@@ -190,7 +192,7 @@ describe("Router", () => {
 
       expect(mockedHandler.mock.calls.length).toBe(1);
       expect(response.status).toBe(200);
-      expect(body).toMatchObject({ message: "Hello" });
+      expect(body).toMatchObject({ message: "Hello Mark" });
     });
   });
 

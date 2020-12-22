@@ -11,15 +11,15 @@ describe("Example worker", () => {
     // Clear all module imports.
     jest.resetModules();
     // Import and init the Worker.
-    jest.requireActual("./worker");
+    jest.requireActual("../src");
   });
 
   describe("Requests", () => {
     [
       {
         method: "GET",
-        requested_url: "/hello",
-        expected: "world",
+        requested_url: "/hello/2020",
+        expected: "Hello 2020",
       },
       {
         requested_url: "/ping",
