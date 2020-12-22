@@ -28,7 +28,7 @@ app.get('/error', ({response}) => {
         .send({error: "Huston we have a problem"});
 });
 
-app.post('/hellouser', async ({event, response}) => {
+app.post('/hellouser/', async ({event, response}) => {
     const body = await event.request.json();
     return response
         .send(`Hello ${body.username}`);

@@ -1,6 +1,6 @@
 {
   "name": "blossa",
-  "version": "0.1.13",
+  "version": "1.0.1",
   "description": "Edge API framework for Cloudflare Workers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
